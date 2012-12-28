@@ -33,6 +33,8 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.lvClusters = new System.Windows.Forms.ListView();
             this.btnBrower = new System.Windows.Forms.Button();
             this.btnCluster = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -43,16 +45,15 @@
             this.picPreview = new System.Windows.Forms.PictureBox();
             this.ofdCluster = new System.Windows.Forms.OpenFileDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.lvClusters = new System.Windows.Forms.ListView();
+            this.btnSaveDB = new System.Windows.Forms.Button();
             this.tabMain.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtNumClusters)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picProcessed)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picPreview)).BeginInit();
-            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabMain
@@ -88,6 +89,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.btnSaveDB);
             this.tabPage3.Controls.Add(this.groupBox3);
             this.tabPage3.Controls.Add(this.btnBrower);
             this.tabPage3.Controls.Add(this.btnCluster);
@@ -103,6 +105,25 @@
             this.tabPage3.Text = "Phân cụm";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.lvClusters);
+            this.groupBox3.Location = new System.Drawing.Point(13, 236);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(1013, 254);
+            this.groupBox3.TabIndex = 6;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Kết quả phân cụm";
+            // 
+            // lvClusters
+            // 
+            this.lvClusters.CheckBoxes = true;
+            this.lvClusters.Location = new System.Drawing.Point(6, 19);
+            this.lvClusters.Name = "lvClusters";
+            this.lvClusters.Size = new System.Drawing.Size(989, 229);
+            this.lvClusters.TabIndex = 0;
+            this.lvClusters.UseCompatibleStateImageBehavior = false;
+            // 
             // btnBrower
             // 
             this.btnBrower.Location = new System.Drawing.Point(449, 27);
@@ -115,7 +136,7 @@
             // 
             // btnCluster
             // 
-            this.btnCluster.Location = new System.Drawing.Point(449, 151);
+            this.btnCluster.Location = new System.Drawing.Point(449, 138);
             this.btnCluster.Name = "btnCluster";
             this.btnCluster.Size = new System.Drawing.Size(102, 36);
             this.btnCluster.TabIndex = 4;
@@ -184,23 +205,15 @@
             this.timer1.Interval = 10;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // groupBox3
+            // btnSaveDB
             // 
-            this.groupBox3.Controls.Add(this.lvClusters);
-            this.groupBox3.Location = new System.Drawing.Point(13, 236);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(1013, 254);
-            this.groupBox3.TabIndex = 6;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Kết quả phân cụm";
-            // 
-            // lvClusters
-            // 
-            this.lvClusters.Location = new System.Drawing.Point(6, 19);
-            this.lvClusters.Name = "lvClusters";
-            this.lvClusters.Size = new System.Drawing.Size(989, 229);
-            this.lvClusters.TabIndex = 0;
-            this.lvClusters.UseCompatibleStateImageBehavior = false;
+            this.btnSaveDB.Location = new System.Drawing.Point(449, 194);
+            this.btnSaveDB.Name = "btnSaveDB";
+            this.btnSaveDB.Size = new System.Drawing.Size(102, 36);
+            this.btnSaveDB.TabIndex = 7;
+            this.btnSaveDB.Text = "Lưu vào database";
+            this.btnSaveDB.UseVisualStyleBackColor = true;
+            this.btnSaveDB.Click += new System.EventHandler(this.btnSaveDB_Click);
             // 
             // frmMain1
             // 
@@ -213,12 +226,12 @@
             this.tabMain.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.txtNumClusters)).EndInit();
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picProcessed)).EndInit();
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picPreview)).EndInit();
-            this.groupBox3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -241,6 +254,7 @@
         private System.Windows.Forms.Button btnBrower;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.ListView lvClusters;
+        private System.Windows.Forms.Button btnSaveDB;
 
     }
 }

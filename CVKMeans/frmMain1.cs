@@ -111,5 +111,20 @@ namespace KMeans
 
         KMeans _kMeans;
         int _count = 0;
+
+        private void btnSaveDB_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < lvClusters.Items.Count; i++)
+            {
+                if (lvClusters.Items[i].Checked)
+                {
+                    picProcessed.Image = lvClusters.Items[i].ImageList.Images[i];
+                    picProcessed.SizeMode = PictureBoxSizeMode.StretchImage;
+                    picProcessed.Refresh();
+                    i++;
+                }
+
+            }
+        }
     }
 }

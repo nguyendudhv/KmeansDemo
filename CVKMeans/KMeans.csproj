@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Colour.cs" />
     <Compile Include="ColourCount.cs" />
+    <Compile Include="Datasevice.cs" />
     <Compile Include="frmCluster.cs">
       <SubType>Form</SubType>
     </Compile>
