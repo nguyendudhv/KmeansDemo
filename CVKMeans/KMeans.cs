@@ -89,8 +89,7 @@ namespace KMeans
                 for (int x = 0; x < size.X; x++)
                 {
                     PixelData pd = Colour.GetPixelData(pPixel, _model);
-                    AllocateToCluster(pd);
-                    
+                    AllocateToCluster(pd);                    
                     //increment the pointer
                     pPixel++;
                 }
@@ -261,7 +260,7 @@ namespace KMeans
             }
         }
 
-        private Color[] _topColours;
+        /*private Color[] _topColours;
         private Colour.Types _model;
         private Dictionary<string, Cluster> _previousCluster;
         private Dictionary<string, Cluster> _currentCluster;
@@ -270,6 +269,16 @@ namespace KMeans
         private Hashtable _clusterColours;
         private bool _converged = false;
         private Bitmap _image;
-        private Bitmap _processedImage;
+        private Bitmap _processedImage;*/
+        public Color[] _topColours;
+        public Colour.Types _model;
+        public Dictionary<string, Cluster> _previousCluster;
+        public Dictionary<string, Cluster> _currentCluster;
+        public Hashtable _colourClusterAllocation;
+        public Hashtable _pixelDataClusterAllocation;
+        public Hashtable _clusterColours;
+        public bool _converged = false;
+        public Bitmap _image;
+        public Bitmap _processedImage;
     }
 }

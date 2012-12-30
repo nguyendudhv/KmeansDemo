@@ -47,6 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClusterCentroid.cs" />
+    <Compile Include="ClusterImage.cs" />
+    <Compile Include="ClusterPoint.cs" />
+    <Compile Include="KMeansAlgorithm.cs" />
+    <Compile Include="Database.cs" />
     <Compile Include="Colour.cs" />
     <Compile Include="ColourCount.cs" />
     <Compile Include="Datasevice.cs" />
