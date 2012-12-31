@@ -102,7 +102,6 @@ namespace KMeans
 
 
             List<ClusterCentroid> centroids = new List<ClusterCentroid>();
-
             //Create random points to use a the cluster centroids
             Random random = new Random();
             for (int i = 0; i < numClusters; i++)
@@ -111,7 +110,7 @@ namespace KMeans
                 int randomNumber2 = random.Next(sourceImage.Height);
                 centroids.Add(new ClusterCentroid(randomNumber1, randomNumber2, filteredImage.GetPixel(randomNumber1, randomNumber2)));
             }
-            foreach (ClusterPoint p in points)
+            /*foreach (ClusterPoint p in points)
             {
                 List<SqlParameter> listParam = new List<SqlParameter>(4);
                 listParam.Add(new SqlParameter("@x",p.X));
@@ -119,21 +118,10 @@ namespace KMeans
                 listParam.Add(new SqlParameter("@Color", p.PixelColor.ToArgb()));
                 listParam.Add(new SqlParameter("@ImageId ", 1));
                 dataBase.RunProcedure("usp_ClusterPointsInsert", listParam.ToArray());
-            }
+            }*/
 
-            foreach (ClusterCentroid c in centroids)
-            {
-                List<SqlParameter> listParam = new List<SqlParameter>(4);
-                listParam.Add(new SqlParameter("@x", c.X));
-                listParam.Add(new SqlParameter("@y", c.Y));
-                listParam.Add(new SqlParameter("@Color", c.PixelColor.ToArgb()));
-                listParam.Add(new SqlParameter("@ImageId ", 1));
-                dataBase.RunProcedure("usp_ClusterCentroidsInsert", listParam.ToArray());
-            }
-
+           
             KMeansAlgorithm alg = new KMeansAlgorithm(points, centroids, 2, filteredImage, (int)txtNumClusters.Value);
-
-
             int k = 0;
             do
             {
@@ -195,12 +183,41 @@ namespace KMeans
                 }
             }
 
+
+
             // Save the image for each segmented cluster
             for (int i = 0; i < centroids.Count; i++)
             {
-                bmapArray[i].Save("Cluster" + i + ".png");
+                bmapArray[i].Save(i.ToString() + ".png");
+                //bmapArray[i].Save(ofdCluster.FileName.Substring(ofdCluster.FileName.LastIndexOf("/")+1)+"_" + i + ".png");
+                /*List<SqlParameter> listParam = new List<SqlParameter>(4);
+                listParam.Add(new SqlParameter("@ImageName", ofdCluster.FileName.Substring(ofdCluster.FileName.LastIndexOf("/") + 1) + "_" + i + ".png"));
+                listParam.Add(new SqlParameter("@Url", ofdCluster.FileName.Substring(ofdCluster.FileName.LastIndexOf("/") + 1) + "_" + i + ".png"));
+                listParam.Add(new SqlParameter("@Width",picPreview.Image.Width));
+                listParam.Add(new SqlParameter("@Height", picPreview.Image.Height));
+                dataBase.RunProcedure("usp_ImageInsert", listParam.ToArray());
+                DataTable dt = dataBase.RunProcedureGet("usp_ImageGetAfterInsert");
+                if (dt.Rows.Count > 0)
+                {
+
+                    List<SqlParameter> listParam1 = new List<SqlParameter>(4);
+                    listParam1.Add(new SqlParameter("@x", centroids[i].X));
+                    listParam1.Add(new SqlParameter("@y", centroids[i].Y));
+                    listParam1.Add(new SqlParameter("@Color", centroids[i].PixelColor.ToArgb()));
+                    listParam1.Add(new SqlParameter("@ImageId ", dt.Rows[0][0]));
+                    dataBase.RunProcedure("usp_ClusterCentroidsInsert", listParam1.ToArray());
+                }*/
             }
 
+            /*foreach (ClusterCentroid c in centroids)
+            {
+                List<SqlParameter> listParam = new List<SqlParameter>(4);
+                listParam.Add(new SqlParameter("@x", c.X));
+                listParam.Add(new SqlParameter("@y", c.Y));
+                listParam.Add(new SqlParameter("@Color", c.PixelColor.ToArgb()));
+                listParam.Add(new SqlParameter("@ImageId ", 1));
+                dataBase.RunProcedure("usp_ClusterCentroidsInsert", listParam.ToArray());
+            }*/
 
             // Resource cleanup...more work to do here to avoid memory problems!!!
             backgroundWorker.ReportProgress(100, "Done in " + k + " iterations.");
@@ -223,7 +240,6 @@ namespace KMeans
    
         private void btnCluster_Click(object sender, EventArgs e)
         {
-            //iSTT = 1;
             lvClusters.Items.Clear();
             lvClusters.Refresh();
             btnCluster.Enabled = false;
@@ -404,10 +420,7 @@ namespace KMeans
         private void btnSearch_Click(object sender, EventArgs e)
         {
             Database dataBase = new Database();
-
-
             backgroundWorker.ReportProgress(0, "Working...");
-
             filteredImage = (Bitmap)picQuery.Image.Clone();
             int numClusters = (int)txtNumClusters.Value;
             int maxIterations = (int)txtIterations.Value;
@@ -420,13 +433,10 @@ namespace KMeans
 
                     Color c2 = originalImage.GetPixel(row, col);
                     points.Add(new ClusterPoint(row, col, c2));
+
                 }
             }
-
-
-
             List<ClusterCentroid> centroids = new List<ClusterCentroid>();
-            //Create random points to use a the cluster centroids
             Random random = new Random();
             for (int i = 0; i < numClusters; i++)
             {
@@ -434,69 +444,17 @@ namespace KMeans
                 int randomNumber2 = random.Next(sourceImage.Height);
                 centroids.Add(new ClusterCentroid(randomNumber1, randomNumber2, filteredImage.GetPixel(randomNumber1, randomNumber2)));
             }
-            foreach (ClusterPoint p in points)
-            {
-                List<SqlParameter> listParam = new List<SqlParameter>(4);
-                listParam.Add(new SqlParameter("@x", p.X));
-                listParam.Add(new SqlParameter("@y", p.Y));
-                listParam.Add(new SqlParameter("@Color", p.PixelColor.ToArgb()));
-                listParam.Add(new SqlParameter("@ImageId ", 1));
-                dataBase.RunProcedure("usp_ClusterPointsInsert", listParam.ToArray());
-            }
-
-            foreach (ClusterCentroid c in centroids)
-            {
-                List<SqlParameter> listParam = new List<SqlParameter>(4);
-                listParam.Add(new SqlParameter("@x", c.X));
-                listParam.Add(new SqlParameter("@y", c.Y));
-                listParam.Add(new SqlParameter("@Color", c.PixelColor.ToArgb()));
-                listParam.Add(new SqlParameter("@ImageId ", 1));
-                dataBase.RunProcedure("usp_ClusterCentroidsInsert", listParam.ToArray());
-            }
 
 
             KMeansAlgorithm alg = new KMeansAlgorithm(points, centroids, 2, filteredImage, (int)txtNumClusters.Value);
-
-
-            int k = 0;
-            do
-            {
-                if ((backgroundWorker.CancellationPending == true))
-                {
-                    //e.Cancel = true;
-                    break;
-                }
-                else
-                {
-
-                    k++;
-                    alg.J = alg.CalculateObjectiveFunction();
-                    alg.CalculateClusterCentroids();
-                    alg.Step();
-                    double Jnew = alg.CalculateObjectiveFunction();
-                    Console.WriteLine("Run method i={0} accuracy = {1} delta={2}", k, alg.J, Math.Abs(alg.J - Jnew));
-                    toolStripStatusLabel2.Text = "Precision " + Math.Abs(alg.J - Jnew);
-
-                    // Format and display the TimeSpan value.
-                    string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", stopWatch.Elapsed.Hours, stopWatch.Elapsed.Minutes, stopWatch.Elapsed.Seconds, stopWatch.Elapsed.Milliseconds / 10);
-                    toolStripStatusLabel3.Text = "Duration: " + elapsedTime;
-
-                    picProcessed.Image = (Bitmap)alg.getProcessedImage;
-                    backgroundWorker.ReportProgress((100 * k) / maxIterations, "Iteration " + k);
-
-                    if (Math.Abs(alg.J - Jnew) < accuracy) break;
-                }
-            }
-            while (maxIterations > k);
-            Console.WriteLine("Done.");
 
             stopWatch.Stop();
             // Get the elapsed time as a TimeSpan value.
             TimeSpan ts = stopWatch.Elapsed;
 
             // Save the segmented image
-            picProcessed.Image = (Bitmap)alg.getProcessedImage.Clone();
-            alg.getProcessedImage.Save("segmented.png");
+            picResult.Image = (Bitmap)alg.getProcessedImage.Clone();
+            alg.getProcessedImage.Save("segmented1.png");
 
 
             // Create a new image for each cluster in order to extract the features from the original image
@@ -522,12 +480,9 @@ namespace KMeans
             // Save the image for each segmented cluster
             for (int i = 0; i < centroids.Count; i++)
             {
-                bmapArray[i].Save("Cluster" + i + ".png");
+                bmapArray[i].Save("Cluster_" + i + ".png");
             }
 
-
-            // Resource cleanup...more work to do here to avoid memory problems!!!
-            backgroundWorker.ReportProgress(100, "Done in " + k + " iterations.");
             ////alg.Dispose();
             for (int i = 0; i < points.Count; i++)
             {
@@ -538,8 +493,6 @@ namespace KMeans
                 centroids[i] = null;
             }
             alg = null;
-            //centroids.Clear();
-            //points.Clear();
         }
     }
 }
