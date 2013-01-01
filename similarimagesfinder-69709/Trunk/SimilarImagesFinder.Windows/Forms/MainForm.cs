@@ -104,7 +104,7 @@
             try
             {
                 directoryInfo = new DirectoryInfo(folder);
-                files = directoryInfo.GetFiles("*.png", SearchOption.AllDirectories);
+                files = directoryInfo.GetFiles("*.jpg||*.png", SearchOption.AllDirectories);
                 exit = false;
                 findButton.Enabled = false;
                 cancelButton.Enabled = !findButton.Enabled;

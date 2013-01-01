@@ -22,9 +22,75 @@ namespace KMeans
         public System.Drawing.Bitmap sourceImage;
         public System.Drawing.Bitmap filteredImage;
         public System.Drawing.Bitmap originalImage;
-
         private BackgroundWorker backgroundWorker;
+        private BindingList<SimilarityImages> similarityImages;
+        private bool exit;
         public Stopwatch stopWatch;
+
+        #region "GUI delegates body"
+        private readonly UpdateListViewDelegate updateListViewDelegate = delegate(BindingList<SimilarityImages> images, ListView listView)
+        {
+            images.RaiseListChangedEvents = true;
+            ImageList imageList = new ImageList();
+            listView.Items.Clear();
+            foreach (SimilarityImages image in images)
+            {
+                Image img = Image.FromFile(image.Destination.File.FullName);
+                imageList.Images.Add(img);
+                listView.Items.Add(new ListViewItem(image.Destination.File.Name + "=>" + image.Similarity.ToString()));
+                listView.Refresh();
+            }
+            imageList.ImageSize = new Size(100, 100);
+            listView.LargeImageList = imageList;
+            for (int i = 0; i < listView.Items.Count; i++)
+            {
+                listView.Items[i].ImageIndex = i;
+            }
+            listView.View = View.LargeIcon;
+            listView.Refresh();
+        };
+
+        private readonly SetMaximumDelegate setMaximumDelegate = delegate(ProgressBar progressBar, int value)
+        {
+            progressBar.Maximum = value;
+        };
+
+        private readonly UpdateOperationStatusDelegate updateOperationStatusDelegate = delegate(string format, System.Windows.Forms.Label label, ProgressBar progressBar, int value, DateTime startTime)
+        {
+            progressBar.Value = value;
+            var percentage = Math.Round(((double)progressBar.Value / (double)progressBar.Maximum), 3);
+            format += " {0}/{1} ({2}) Elapsed: {3} Estimated: {4}";
+
+            var elapsed = DateTime.Now.Subtract(startTime);
+            elapsed = new TimeSpan(elapsed.Days, elapsed.Hours, elapsed.Minutes, elapsed.Seconds, 0);
+
+            var estimatedTicks = (elapsed.Ticks / value) * progressBar.Maximum;
+            var estimated = new TimeSpan(estimatedTicks);
+            estimated = new TimeSpan(estimated.Days, estimated.Hours, estimated.Minutes, estimated.Seconds, 0);
+
+            label.Text = string.Format(format, progressBar.Value, progressBar.Maximum, percentage.ToString("P"), elapsed.ToString(), estimated.ToString());
+        };
+
+        private readonly ShowListViewDelegate showListViewDelegate = delegate(ListView listView)
+        {
+            listView.ResumeLayout();
+            listView.Enabled = true;
+        };
+        #endregion
+
+        #region "GUI delegates"
+        private delegate void ProcessImagesDelegate(FileInfo[] files);
+
+        private delegate void SetMaximumDelegate(ProgressBar progressBar, int value);
+
+        private delegate void UpdateOperationStatusDelegate(string format, Label label, ProgressBar progressBar, int value, DateTime startTime);
+
+        private delegate void UpdateListViewDelegate(BindingList<SimilarityImages> images, ListView listView);
+
+        private delegate void DeleteImageDelegate(FileInfo fileInfo);
+
+        private delegate void ShowListViewDelegate(ListView listView);
+        #endregion
         public frmMain1()
         {
             InitializeComponent();
@@ -37,6 +103,67 @@ namespace KMeans
 
             stopWatch = new Stopwatch();
 
+        }
+
+        private void ProcessImages(FileInfo[] files)
+        {
+            var comparableImages = new List<ComparableImage>();
+
+            //Invoke(setMaximumDelegate, new object[] { workingProgressBar, files.Length });
+
+            var index = 0x0;
+
+            var operationStartTime = DateTime.Now;
+
+            foreach (var file in files)
+            {
+                if (exit)
+                {
+                    return;
+                }
+                var comparableImage = new ComparableImage(file);
+                comparableImages.Add(comparableImage);
+                index++;
+                //Invoke(updateOperationStatusDelegate, new object[] { "Processed images", workingLabel, workingProgressBar, index, operationStartTime });
+            }
+
+           // Invoke(setMaximumDelegate, new object[] { workingProgressBar, (comparableImages.Count * (comparableImages.Count - 1)) / 2 });
+
+            index = 0;
+
+            var similarityImagesSorted = new List<SimilarityImages>();
+
+            operationStartTime = DateTime.Now;
+            double maxSimilarity = 0;
+            for (var i = 0; i < comparableImages.Count; i++)
+            {
+                if (exit)
+                {
+                    return;
+                }
+                ComparableImage sourceImage = new ComparableImage(new FileInfo(ImageName));
+                var destination = comparableImages[i];
+                var similarity = sourceImage.CalculateSimilarity(destination);
+                 
+                var sim = new SimilarityImages(sourceImage, destination, similarity);
+                if (sim.Similarity>=double.Parse(txtPrecision.Value.ToString()))
+                {
+                    if (maxSimilarity < sim.Similarity)
+                        maxSimilarity = sim.Similarity;
+                    similarityImagesSorted.Add(sim);
+                    index++;
+                }
+                //if (similarity >=1)
+                //{
+                    
+                //}
+            }
+
+            similarityImagesSorted.Sort();
+            similarityImagesSorted.Reverse();
+            similarityImages = new BindingList<SimilarityImages>(similarityImagesSorted);
+
+            BeginInvoke(updateListViewDelegate, new object[] { similarityImages, lvImageSimilar });
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -404,12 +531,13 @@ namespace KMeans
             dir = Directory.GetParent(dir).FullName;
             this.ofdImageQuery.InitialDirectory = dir;
 
-            this.ofdImageQuery.Filter = "IMAGES |*.jpg;*.bmp";
+            this.ofdImageQuery.Filter = "IMAGES |*.jpg;*.bmp;*.png";
             this.ofdImageQuery.FileName = "";
 
             if (this.ofdImageQuery.ShowDialog() == DialogResult.OK)
             {
                 Image b = Image.FromFile(ofdImageQuery.FileName);
+                ImageName = ofdImageQuery.FileName;
                 picQuery.Image = b;
                 picQuery.Refresh();
                 originalImage = (Bitmap)picQuery.Image.Clone();
@@ -419,80 +547,39 @@ namespace KMeans
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            Database dataBase = new Database();
-            backgroundWorker.ReportProgress(0, "Working...");
-            filteredImage = (Bitmap)picQuery.Image.Clone();
-            int numClusters = (int)txtNumClusters.Value;
-            int maxIterations = (int)txtIterations.Value;
-            double accuracy = 0.00001;
-            List<ClusterPoint> points = new List<ClusterPoint>();
-            for (int row = 0; row < originalImage.Width; ++row)
+
+            lvClusters.Items.Clear();
+            lvClusters.Refresh();
+            var folder = @"F:\Working\KneansDemo\KmeansDemo\trunk\CVKMeans\bin\Debug";
+
+            DirectoryInfo directoryInfo;
+            FileInfo[] files;
+            try
             {
-                for (int col = 0; col < originalImage.Height; ++col)
-                {
-
-                    Color c2 = originalImage.GetPixel(row, col);
-                    points.Add(new ClusterPoint(row, col, c2));
-
-                }
+                directoryInfo = new DirectoryInfo(folder);
+                files = directoryInfo.GetFiles("*.png", SearchOption.AllDirectories);
+                exit = false;
+              
             }
-            List<ClusterCentroid> centroids = new List<ClusterCentroid>();
-            Random random = new Random();
-            for (int i = 0; i < numClusters; i++)
+            catch (DirectoryNotFoundException)
             {
-                int randomNumber1 = random.Next(sourceImage.Width);
-                int randomNumber2 = random.Next(sourceImage.Height);
-                centroids.Add(new ClusterCentroid(randomNumber1, randomNumber2, filteredImage.GetPixel(randomNumber1, randomNumber2)));
+                MessageBox.Show("Path not valid.", "Invalid path", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-
-
-            KMeansAlgorithm alg = new KMeansAlgorithm(points, centroids, 2, filteredImage, (int)txtNumClusters.Value);
-
-            stopWatch.Stop();
-            // Get the elapsed time as a TimeSpan value.
-            TimeSpan ts = stopWatch.Elapsed;
-
-            // Save the segmented image
-            picResult.Image = (Bitmap)alg.getProcessedImage.Clone();
-            alg.getProcessedImage.Save("segmented1.png");
-
-
-            // Create a new image for each cluster in order to extract the features from the original image
-            double[,] Matrix = alg.U;
-            Bitmap[] bmapArray = new Bitmap[centroids.Count];
-            for (int i = 0; i < centroids.Count; i++)
+            catch (ArgumentException)
             {
-                bmapArray[i] = new Bitmap(sourceImage.Width, sourceImage.Height, PixelFormat.Format32bppRgb);
+                MessageBox.Show("Path not valid.", "Invalid path", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
 
-            for (int j = 0; j < points.Count; j++)
-            {
-                for (int i = 0; i < centroids.Count; i++)
-                {
-                    ClusterPoint p = points[j];
-                    if (Matrix[j, i] == p.ClusterIndex)
-                    {
-                        bmapArray[i].SetPixel((int)p.X, (int)p.Y, p.OriginalPixelColor);
-                    }
-                }
-            }
+            var processImagesDelegate = new ProcessImagesDelegate(ProcessImages);
+            processImagesDelegate.BeginInvoke(files, null, null);
+            
+        }
 
-            // Save the image for each segmented cluster
-            for (int i = 0; i < centroids.Count; i++)
-            {
-                bmapArray[i].Save("Cluster_" + i + ".png");
-            }
-
-            ////alg.Dispose();
-            for (int i = 0; i < points.Count; i++)
-            {
-                points[i] = null;
-            }
-            for (int i = 0; i < centroids.Count; i++)
-            {
-                centroids[i] = null;
-            }
-            alg = null;
+        private void frmMain1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            exit = true;
         }
     }
 }

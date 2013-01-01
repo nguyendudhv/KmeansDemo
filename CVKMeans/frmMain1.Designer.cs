@@ -31,15 +31,25 @@
             this.components = new System.ComponentModel.Container();
             this.tabMain = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.btnSearch = new System.Windows.Forms.Button();
+            this.btnBrowerQuery = new System.Windows.Forms.Button();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.lvImageSimilar = new System.Windows.Forms.ListView();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.picQuery = new System.Windows.Forms.PictureBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.btnCancel = new System.Windows.Forms.Button();
             this.txtImagePath = new System.Windows.Forms.TextBox();
             this.btnSaveDB = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.lvClusters = new System.Windows.Forms.ListView();
             this.btnBrower = new System.Windows.Forms.Button();
             this.btnCluster = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.txtIterations = new System.Windows.Forms.NumericUpDown();
             this.txtNumClusters = new System.Windows.Forms.NumericUpDown();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.picProcessed = new System.Windows.Forms.PictureBox();
@@ -48,40 +58,29 @@
             this.ofdCluster = new System.Windows.Forms.OpenFileDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.timer2 = new System.Windows.Forms.Timer(this.components);
-            this.txtIterations = new System.Windows.Forms.NumericUpDown();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.picQuery = new System.Windows.Forms.PictureBox();
-            this.picResult = new System.Windows.Forms.PictureBox();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.lvImageSimilar = new System.Windows.Forms.ListView();
-            this.btnBrowerQuery = new System.Windows.Forms.Button();
-            this.btnSearch = new System.Windows.Forms.Button();
             this.ofdImageQuery = new System.Windows.Forms.OpenFileDialog();
+            this.txtPrecision = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
             this.tabMain.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picQuery)).BeginInit();
             this.tabPage3.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.txtIterations)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtNumClusters)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picProcessed)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picPreview)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtIterations)).BeginInit();
             this.statusStrip1.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            this.groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picQuery)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picResult)).BeginInit();
-            this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.txtPrecision)).BeginInit();
             this.SuspendLayout();
             // 
             // tabMain
@@ -97,10 +96,11 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.label4);
+            this.tabPage1.Controls.Add(this.txtPrecision);
             this.tabPage1.Controls.Add(this.btnSearch);
             this.tabPage1.Controls.Add(this.btnBrowerQuery);
             this.tabPage1.Controls.Add(this.groupBox6);
-            this.tabPage1.Controls.Add(this.groupBox5);
             this.tabPage1.Controls.Add(this.groupBox4);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
@@ -109,6 +109,62 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Query Image";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // btnSearch
+            // 
+            this.btnSearch.Location = new System.Drawing.Point(32, 403);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(85, 28);
+            this.btnSearch.TabIndex = 4;
+            this.btnSearch.Text = "Tìm kiếm:";
+            this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            // 
+            // btnBrowerQuery
+            // 
+            this.btnBrowerQuery.Location = new System.Drawing.Point(32, 263);
+            this.btnBrowerQuery.Name = "btnBrowerQuery";
+            this.btnBrowerQuery.Size = new System.Drawing.Size(85, 28);
+            this.btnBrowerQuery.TabIndex = 3;
+            this.btnBrowerQuery.Text = "Duyệt ảnh:";
+            this.btnBrowerQuery.UseVisualStyleBackColor = true;
+            this.btnBrowerQuery.Click += new System.EventHandler(this.btnBrowerQuery_Click);
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.lvImageSimilar);
+            this.groupBox6.Location = new System.Drawing.Point(400, 6);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(626, 484);
+            this.groupBox6.TabIndex = 2;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Kết quả tìm kiếm";
+            // 
+            // lvImageSimilar
+            // 
+            this.lvImageSimilar.Location = new System.Drawing.Point(15, 19);
+            this.lvImageSimilar.Name = "lvImageSimilar";
+            this.lvImageSimilar.Size = new System.Drawing.Size(605, 448);
+            this.lvImageSimilar.TabIndex = 0;
+            this.lvImageSimilar.UseCompatibleStateImageBehavior = false;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.picQuery);
+            this.groupBox4.Location = new System.Drawing.Point(32, 25);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(320, 232);
+            this.groupBox4.TabIndex = 0;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Ảnh truy vấn";
+            // 
+            // picQuery
+            // 
+            this.picQuery.Location = new System.Drawing.Point(6, 13);
+            this.picQuery.Name = "picQuery";
+            this.picQuery.Size = new System.Drawing.Size(308, 213);
+            this.picQuery.TabIndex = 0;
+            this.picQuery.TabStop = false;
             // 
             // tabPage2
             // 
@@ -142,6 +198,16 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Phân cụm";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Location = new System.Drawing.Point(541, 168);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(102, 36);
+            this.btnCancel.TabIndex = 9;
+            this.btnCancel.Text = "Hủy bỏ:";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // txtImagePath
             // 
@@ -199,6 +265,24 @@
             this.btnCluster.UseVisualStyleBackColor = true;
             this.btnCluster.Click += new System.EventHandler(this.btnCluster_Click);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(347, 87);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(75, 13);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "Độ chính xác:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(365, 66);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(57, 13);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Số lần lặp:";
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -207,6 +291,18 @@
             this.label1.Size = new System.Drawing.Size(46, 13);
             this.label1.TabIndex = 3;
             this.label1.Text = "Số cụm:";
+            // 
+            // txtIterations
+            // 
+            this.txtIterations.Location = new System.Drawing.Point(439, 61);
+            this.txtIterations.Name = "txtIterations";
+            this.txtIterations.Size = new System.Drawing.Size(61, 20);
+            this.txtIterations.TabIndex = 2;
+            this.txtIterations.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
             // 
             // txtNumClusters
             // 
@@ -268,36 +364,6 @@
             // 
             this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
             // 
-            // txtIterations
-            // 
-            this.txtIterations.Location = new System.Drawing.Point(439, 61);
-            this.txtIterations.Name = "txtIterations";
-            this.txtIterations.Size = new System.Drawing.Size(61, 20);
-            this.txtIterations.TabIndex = 2;
-            this.txtIterations.Value = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(365, 66);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(57, 13);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Số lần lặp:";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(347, 87);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(75, 13);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "Độ chính xác:";
-            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -335,93 +401,31 @@
             this.toolStripStatusLabel3.Size = new System.Drawing.Size(58, 17);
             this.toolStripStatusLabel3.Text = "Precision:";
             // 
-            // btnCancel
-            // 
-            this.btnCancel.Location = new System.Drawing.Point(541, 168);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(102, 36);
-            this.btnCancel.TabIndex = 9;
-            this.btnCancel.Text = "Hủy bỏ:";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.picQuery);
-            this.groupBox4.Location = new System.Drawing.Point(24, 13);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(234, 206);
-            this.groupBox4.TabIndex = 0;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Ảnh truy vấn";
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.Controls.Add(this.picResult);
-            this.groupBox5.Location = new System.Drawing.Point(586, 13);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(234, 206);
-            this.groupBox5.TabIndex = 1;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Kết quả:";
-            // 
-            // picQuery
-            // 
-            this.picQuery.Location = new System.Drawing.Point(6, 19);
-            this.picQuery.Name = "picQuery";
-            this.picQuery.Size = new System.Drawing.Size(222, 181);
-            this.picQuery.TabIndex = 0;
-            this.picQuery.TabStop = false;
-            // 
-            // picResult
-            // 
-            this.picResult.Location = new System.Drawing.Point(6, 13);
-            this.picResult.Name = "picResult";
-            this.picResult.Size = new System.Drawing.Size(222, 181);
-            this.picResult.TabIndex = 1;
-            this.picResult.TabStop = false;
-            // 
-            // groupBox6
-            // 
-            this.groupBox6.Controls.Add(this.lvImageSimilar);
-            this.groupBox6.Location = new System.Drawing.Point(10, 237);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(1016, 245);
-            this.groupBox6.TabIndex = 2;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Các ảnh tương tự:";
-            // 
-            // lvImageSimilar
-            // 
-            this.lvImageSimilar.Location = new System.Drawing.Point(14, 19);
-            this.lvImageSimilar.Name = "lvImageSimilar";
-            this.lvImageSimilar.Size = new System.Drawing.Size(996, 220);
-            this.lvImageSimilar.TabIndex = 0;
-            this.lvImageSimilar.UseCompatibleStateImageBehavior = false;
-            // 
-            // btnBrowerQuery
-            // 
-            this.btnBrowerQuery.Location = new System.Drawing.Point(281, 28);
-            this.btnBrowerQuery.Name = "btnBrowerQuery";
-            this.btnBrowerQuery.Size = new System.Drawing.Size(85, 28);
-            this.btnBrowerQuery.TabIndex = 3;
-            this.btnBrowerQuery.Text = "Duyệt ảnh:";
-            this.btnBrowerQuery.UseVisualStyleBackColor = true;
-            this.btnBrowerQuery.Click += new System.EventHandler(this.btnBrowerQuery_Click);
-            // 
-            // btnSearch
-            // 
-            this.btnSearch.Location = new System.Drawing.Point(391, 98);
-            this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(85, 28);
-            this.btnSearch.TabIndex = 4;
-            this.btnSearch.Text = "Tìm kiếm:";
-            this.btnSearch.UseVisualStyleBackColor = true;
-            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
-            // 
             // ofdImageQuery
             // 
             this.ofdImageQuery.FileName = "openFileDialog1";
+            // 
+            // txtPrecision
+            // 
+            this.txtPrecision.Location = new System.Drawing.Point(32, 362);
+            this.txtPrecision.Name = "txtPrecision";
+            this.txtPrecision.Size = new System.Drawing.Size(120, 20);
+            this.txtPrecision.TabIndex = 5;
+            this.txtPrecision.Value = new decimal(new int[] {
+            80,
+            0,
+            0,
+            0});
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.label4.Location = new System.Drawing.Point(28, 325);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(100, 20);
+            this.label4.TabIndex = 6;
+            this.label4.Text = "Độ chính xác";
             // 
             // frmMain1
             // 
@@ -432,24 +436,25 @@
             this.Controls.Add(this.tabMain);
             this.Name = "frmMain1";
             this.Text = "Tra cứu ảnh theo thuật toán Kmeans";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain1_FormClosing);
             this.tabMain.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picQuery)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.groupBox3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.txtIterations)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtNumClusters)).EndInit();
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picProcessed)).EndInit();
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picPreview)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtIterations)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox5.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.picQuery)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picResult)).EndInit();
-            this.groupBox6.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.txtPrecision)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -486,14 +491,14 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.PictureBox picQuery;
-        private System.Windows.Forms.PictureBox picResult;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.ListView lvImageSimilar;
         private System.Windows.Forms.Button btnBrowerQuery;
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.OpenFileDialog ofdImageQuery;
+        private System.Windows.Forms.NumericUpDown txtPrecision;
+        private System.Windows.Forms.Label label4;
 
     }
 }
