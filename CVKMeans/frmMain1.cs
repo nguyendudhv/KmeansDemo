@@ -79,7 +79,7 @@ namespace KMeans
         #endregion
 
         #region "GUI delegates"
-        private delegate void ProcessImagesDelegate(FileInfo[] files);
+        private delegate void ProcessImagesDelegate(DataTable dt);
 
         private delegate void SetMaximumDelegate(ProgressBar progressBar, int value);
 
@@ -105,7 +105,7 @@ namespace KMeans
 
         }
 
-        private void ProcessImages(FileInfo[] files)
+        private void ProcessImages(DataTable dt)
         {
             var comparableImages = new List<ComparableImage>();
 
@@ -114,14 +114,13 @@ namespace KMeans
             var index = 0x0;
 
             var operationStartTime = DateTime.Now;
-
-            foreach (var file in files)
+            int k = Application.StartupPath.IndexOf("\\bin");
+            string sub = Application.StartupPath.Substring(k);
+            string ImagePath = Application.StartupPath.Substring(0, Application.StartupPath.Length - sub.Length) ;
+            foreach (DataRow row in dt.Rows)
             {
-                if (exit)
-                {
-                    return;
-                }
-                var comparableImage = new ComparableImage(file);
+
+                var comparableImage = new ComparableImage(new FileInfo(ImagePath+row["Url"].ToString()));
                 comparableImages.Add(comparableImage);
                 index++;
                 //Invoke(updateOperationStatusDelegate, new object[] { "Processed images", workingLabel, workingProgressBar, index, operationStartTime });
@@ -153,10 +152,6 @@ namespace KMeans
                     similarityImagesSorted.Add(sim);
                     index++;
                 }
-                //if (similarity >=1)
-                //{
-                    
-                //}
             }
 
             similarityImagesSorted.Sort();
@@ -174,13 +169,10 @@ namespace KMeans
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-
-
             if ((e.Cancelled == true))
             {
                 toolStripStatusLabel1.Text = "Canceled!";
                 btnCluster.Enabled = true;
-                btnCancel.Enabled = false;
             }
 
             else if (!(e.Error == null))
@@ -209,9 +201,6 @@ namespace KMeans
             int numClusters = (int)txtNumClusters.Value;
             int maxIterations = (int)txtIterations.Value;
             double accuracy = 0.00001;
-
-
-
             List<ClusterPoint> points = new List<ClusterPoint>();
 
 
@@ -225,9 +214,6 @@ namespace KMeans
 
                 }
             }
-
-
-
             List<ClusterCentroid> centroids = new List<ClusterCentroid>();
             //Create random points to use a the cluster centroids
             Random random = new Random();
@@ -246,8 +232,6 @@ namespace KMeans
                 listParam.Add(new SqlParameter("@ImageId ", 1));
                 dataBase.RunProcedure("usp_ClusterPointsInsert", listParam.ToArray());
             }*/
-
-           
             KMeansAlgorithm alg = new KMeansAlgorithm(points, centroids, 2, filteredImage, (int)txtNumClusters.Value);
             int k = 0;
             do
@@ -287,7 +271,7 @@ namespace KMeans
 
             // Save the segmented image
             picProcessed.Image = (Bitmap)alg.getProcessedImage.Clone();
-            alg.getProcessedImage.Save("segmented.png");
+           
 
 
             // Create a new image for each cluster in order to extract the features from the original image
@@ -309,21 +293,31 @@ namespace KMeans
                     }
                 }
             }
-
-
-
+            k = Application.StartupPath.IndexOf("\\bin");
+            string sub = Application.StartupPath.Substring(k);
+            string ImagePath = Application.StartupPath.Substring(0, Application.StartupPath.Length - sub.Length) + "\\AnhData\\";
+            DirectoryInfo dirInfo = new DirectoryInfo(ImagePath);
+            if (dirInfo.Exists)
+                dirInfo.Create();    
+            List<SqlParameter> listParam = new List<SqlParameter>(4);
+            string imageName = ofdCluster.FileName.Substring(ofdCluster.FileName.LastIndexOf(@"\") + 1);
+            listParam.Add(new SqlParameter("@ImageName", imageName.Substring(0, ofdCluster.FileName.Substring(ofdCluster.FileName.LastIndexOf(@"\") + 1).Length - imageName.Substring(imageName.LastIndexOf(".")).Length) + "_segmented.png"));
+            listParam.Add(new SqlParameter("@Url", "\\AnhData\\" + imageName.Substring(0, ofdCluster.FileName.Substring(ofdCluster.FileName.LastIndexOf(@"\") + 1).Length - imageName.Substring(imageName.LastIndexOf(".")).Length) + "_segmented.png"));
+            listParam.Add(new SqlParameter("@Width", picPreview.Image.Width));
+            listParam.Add(new SqlParameter("@Height", picPreview.Image.Height));
+            dataBase.RunProcedure("usp_ImageInsert", listParam.ToArray());
+            alg.getProcessedImage.Save(ImagePath + imageName.Substring(0, ofdCluster.FileName.Substring(ofdCluster.FileName.LastIndexOf(@"\") + 1).Length - imageName.Substring(imageName.LastIndexOf(".")).Length) + "_segmented.png");
             // Save the image for each segmented cluster
             for (int i = 0; i < centroids.Count; i++)
             {
-                bmapArray[i].Save(i.ToString() + ".png");
-                //bmapArray[i].Save(ofdCluster.FileName.Substring(ofdCluster.FileName.LastIndexOf("/")+1)+"_" + i + ".png");
-                /*List<SqlParameter> listParam = new List<SqlParameter>(4);
-                listParam.Add(new SqlParameter("@ImageName", ofdCluster.FileName.Substring(ofdCluster.FileName.LastIndexOf("/") + 1) + "_" + i + ".png"));
-                listParam.Add(new SqlParameter("@Url", ofdCluster.FileName.Substring(ofdCluster.FileName.LastIndexOf("/") + 1) + "_" + i + ".png"));
-                listParam.Add(new SqlParameter("@Width",picPreview.Image.Width));
-                listParam.Add(new SqlParameter("@Height", picPreview.Image.Height));
-                dataBase.RunProcedure("usp_ImageInsert", listParam.ToArray());
-                DataTable dt = dataBase.RunProcedureGet("usp_ImageGetAfterInsert");
+                bmapArray[i].Save(ImagePath + imageName.Substring(0, ofdCluster.FileName.Substring(ofdCluster.FileName.LastIndexOf(@"\") + 1).Length - imageName.Substring(imageName.LastIndexOf(".")).Length) + "_" + i + ".png");
+                List<SqlParameter> listParam1 = new List<SqlParameter>(4);
+                listParam1.Add(new SqlParameter("@ImageName", imageName.Substring(0, ofdCluster.FileName.Substring(ofdCluster.FileName.LastIndexOf(@"\") + 1).Length - imageName.Substring(imageName.LastIndexOf(".")).Length) + "_" + i + ".png"));
+                listParam1.Add(new SqlParameter("@Url", "\\AnhData\\" + imageName.Substring(0, ofdCluster.FileName.Substring(ofdCluster.FileName.LastIndexOf(@"\") + 1).Length - imageName.Substring(imageName.LastIndexOf(".")).Length) +"_" + i + ".png"));
+                listParam1.Add(new SqlParameter("@Width", picPreview.Image.Width));
+                listParam1.Add(new SqlParameter("@Height", picPreview.Image.Height));
+                dataBase.RunProcedure("usp_ImageInsert", listParam1.ToArray());
+                /*DataTable dt = dataBase.RunProcedureGet("usp_ImageGetAfterInsert");
                 if (dt.Rows.Count > 0)
                 {
 
@@ -335,16 +329,6 @@ namespace KMeans
                     dataBase.RunProcedure("usp_ClusterCentroidsInsert", listParam1.ToArray());
                 }*/
             }
-
-            /*foreach (ClusterCentroid c in centroids)
-            {
-                List<SqlParameter> listParam = new List<SqlParameter>(4);
-                listParam.Add(new SqlParameter("@x", c.X));
-                listParam.Add(new SqlParameter("@y", c.Y));
-                listParam.Add(new SqlParameter("@Color", c.PixelColor.ToArgb()));
-                listParam.Add(new SqlParameter("@ImageId ", 1));
-                dataBase.RunProcedure("usp_ClusterCentroidsInsert", listParam.ToArray());
-            }*/
 
             // Resource cleanup...more work to do here to avoid memory problems!!!
             backgroundWorker.ReportProgress(100, "Done in " + k + " iterations.");
@@ -369,16 +353,9 @@ namespace KMeans
         {
             lvClusters.Items.Clear();
             lvClusters.Refresh();
-            btnCluster.Enabled = false;
-            btnCancel.Enabled = true;
-
             stopWatch.Reset();
             stopWatch.Start();
             backgroundWorker.RunWorkerAsync();
-            //_kMeans = new KMeans((Bitmap)picPreview.Image, Convert.ToInt32(txtNumClusters.Text), ImageProcessor.Colour.Types.RGB);
-            //timer1.Enabled = true;
-            //timer1.Start();
-
         }
 
         private void btnBrower_Click(object sender, EventArgs e)
@@ -397,134 +374,12 @@ namespace KMeans
                 ImageName = ofdCluster.FileName;
                 picPreview.Image = b;
                 picPreview.Refresh();
-                //pictureBox1.Image = new Bitmap(openFileDialog.FileName);
                 originalImage = (Bitmap)picPreview.Image.Clone();
                 sourceImage = (Bitmap)picPreview.Image.Clone();
-                //pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-                //pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
             }
         }
 
-
-        #region "CONTROL EVENTS"
-
-        /*private void timer1_Tick(object sender, EventArgs e)
-        {
-            
-            ListViewItem lvitem;
-            
-            if (!_kMeans.Converged)
-            {
-                _kMeans.Iterate();
-                picProcessed.Image = _kMeans.ProcessedImage;
-                imglist.Images.Add(picProcessed.Image);
-                imglist.ImageSize = new System.Drawing.Size(100, 100);
-                picProcessed.Refresh();
-                _count++;
-                lvitem = new ListViewItem("Ảnh thứ  " + _count.ToString());
-            }
-            else
-            {
-               
-                _count = 0;
-                timer1.Enabled = false;
-                timer1.Stop();
-            }
-            if (timer1.Enabled == false)
-            {
-               
-                picProcessed.Image = _kMeans.ProcessedImage;
-                picProcessed.Refresh();
-            }
-
-            
-            while ( _count>0)
-            {
-                lvitem = new ListViewItem("Ảnh thứ  " + iSTT.ToString());
-                lvClusters.Items.Add(lvitem);
-                iSTT++;
-                _count--;
-            }
-            lvClusters.LargeImageList = imglist;
-            for (int i = 0; i < lvClusters.Items.Count; i++)
-            {
-                lvClusters.Items[i].ImageIndex = i;
-            }
-            lvClusters.View = View.LargeIcon;
-            lvClusters.Refresh();
-            
-            
-        }*/
-        #endregion
-
-        KMeans _kMeans;
-        int _count = 0;
-
-        private void btnSaveDB_Click(object sender, EventArgs e)
-        {
-            if (picPreview.Image != null)
-            {
-                /*Database dataBase = new Database();
-                List<SqlParameter> listParam = new List<SqlParameter>(4);
-                listParam.Add(new SqlParameter("@ImageName",ImageName.Substring(ImageName.LastIndexOf(@"\"))));
-                listParam.Add(new SqlParameter("@Url",txtImagePath.Text));
-                listParam.Add(new SqlParameter("@Width",picPreview.Image.Width));
-                listParam.Add(new SqlParameter("@Height", picPreview.Image.Height));
-                dataBase.RunProcedure("usp_ImageInsert", listParam.ToArray());
-                _kMeans = new KMeans((Bitmap)picPreview.Image, Convert.ToInt32(txtNumClusters.Text), ImageProcessor.Colour.Types.RGB);
-                timer2.Enabled = true;
-                timer2.Start();*/
-            }
-        }
-
-        private void timer2_Tick(object sender, EventArgs e)
-        {
-            /*if (!_kMeans.Converged)
-            {
-                _kMeans.Iterate();
-                picProcessed.Image = _kMeans.ProcessedImage;
-                imglist.Images.Add(picProcessed.Image);
-                imglist.ImageSize = new System.Drawing.Size(100, 100);
-                picProcessed.Refresh();
-                Database dataBase = new Database();
-                List<SqlParameter> listParam = new List<SqlParameter>(5);
-                foreach (KeyValuePair<string,KMeans.Cluster> pair in _kMeans._currentCluster)
-	            {
-                    listParam.Add(new SqlParameter("@ColorR", pair.Value.CentroidR));
-                    listParam.Add(new SqlParameter("@ColorB", pair.Value.CentroidB));
-                    listParam.Add(new SqlParameter("@ColorG", pair.Value.CentroidR));
-                    listParam.Add(new SqlParameter("@ColorA", 11));
-                }
-                
-                listParam.Add(new SqlParameter("@TotalPixel",10.1));
-                dataBase.RunProcedure("usp_ClusterImageInsert", listParam.ToArray());
-                _count++;
-            }
-            else
-            {
-
-                _count = 0;
-                timer1.Enabled = false;
-                timer1.Stop();
-            }
-            if (timer1.Enabled == false)
-            {
-
-                picProcessed.Image = _kMeans.ProcessedImage;
-                picProcessed.Refresh();
-            }*/
-        }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            if (backgroundWorker != null)
-            {
-                backgroundWorker.CancelAsync();
-            }
-            btnCluster.Enabled = true;
-            toolStripStatusLabel1.Text = "Aborting, please wait...";
-        }
-
+        
         private void btnBrowerQuery_Click(object sender, EventArgs e)
         {
             string dir = Directory.GetParent(Environment.CurrentDirectory).FullName;
@@ -550,16 +405,20 @@ namespace KMeans
 
             lvClusters.Items.Clear();
             lvClusters.Refresh();
-            var folder = @"F:\Working\KneansDemo\KmeansDemo\trunk\CVKMeans\bin\Debug";
-
-            DirectoryInfo directoryInfo;
-            FileInfo[] files;
+            int k = Application.StartupPath.IndexOf("\\bin");
+            string sub = Application.StartupPath.Substring(k);
+            string ImagePath = Application.StartupPath.Substring(0, Application.StartupPath.Length - sub.Length) + "\\AnhData";
+            //DirectoryInfo directoryInfo;
+            //FileInfo[] files;
             try
             {
-                directoryInfo = new DirectoryInfo(folder);
-                files = directoryInfo.GetFiles("*.png", SearchOption.AllDirectories);
-                exit = false;
-              
+                //directoryInfo = new DirectoryInfo(ImagePath);
+                //files = directoryInfo.GetFiles("*.png", SearchOption.AllDirectories);
+                //exit = false;
+                Database db = new Database();
+                DataTable dt = db.RunProcedureGet("usp_ImageGetAll");
+                var processImagesDelegate = new ProcessImagesDelegate(ProcessImages);
+                processImagesDelegate.BeginInvoke(dt, null, null);
             }
             catch (DirectoryNotFoundException)
             {
@@ -571,15 +430,39 @@ namespace KMeans
                 MessageBox.Show("Path not valid.", "Invalid path", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-            var processImagesDelegate = new ProcessImagesDelegate(ProcessImages);
-            processImagesDelegate.BeginInvoke(files, null, null);
-            
         }
 
         private void frmMain1_FormClosing(object sender, FormClosingEventArgs e)
         {
             exit = true;
+        }
+
+        private void frmMain1_Load(object sender, EventArgs e)
+        {
+            LoadImageFromDB();
+        }
+
+        private void LoadImageFromDB()
+        {
+            int k = Application.StartupPath.IndexOf("\\bin");
+            string sub = Application.StartupPath.Substring(k);
+            string ImagePath = Application.StartupPath.Substring(0, Application.StartupPath.Length - sub.Length);
+            Database db = new Database();
+            DataTable dt=db.RunProcedureGet("usp_ImageGetAll");
+            ImageList imglist = new ImageList();
+            foreach (DataRow row in dt.Rows)
+            {
+                Image image= Image.FromFile(ImagePath+row["Url"].ToString());
+                imglist.Images.Add(image);
+                lvImageDB.Items.Add(new ListViewItem(row["ImageName"].ToString()));
+            }
+            imglist.ImageSize = new System.Drawing.Size(200, 200);
+            lvImageDB.LargeImageList = imglist;
+            for (int i=0; i < lvImageDB.Items.Count; i++)
+            {
+                lvImageDB.Items[i].ImageIndex = i;
+            }
+            lvImageDB.Refresh();
         }
     }
 }

@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.tabMain = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.label4 = new System.Windows.Forms.Label();
@@ -46,7 +45,6 @@
             this.lvClusters = new System.Windows.Forms.ListView();
             this.btnBrower = new System.Windows.Forms.Button();
             this.btnCluster = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.txtIterations = new System.Windows.Forms.NumericUpDown();
@@ -56,20 +54,20 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.picPreview = new System.Windows.Forms.PictureBox();
             this.ofdCluster = new System.Windows.Forms.OpenFileDialog();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.ofdImageQuery = new System.Windows.Forms.OpenFileDialog();
+            this.lvImageDB = new System.Windows.Forms.ListView();
             this.tabMain.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtPrecision)).BeginInit();
             this.groupBox6.SuspendLayout();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picQuery)).BeginInit();
+            this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtIterations)).BeginInit();
@@ -188,6 +186,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.lvImageDB);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -202,7 +201,6 @@
             this.tabPage3.Controls.Add(this.groupBox3);
             this.tabPage3.Controls.Add(this.btnBrower);
             this.tabPage3.Controls.Add(this.btnCluster);
-            this.tabPage3.Controls.Add(this.label3);
             this.tabPage3.Controls.Add(this.label2);
             this.tabPage3.Controls.Add(this.label1);
             this.tabPage3.Controls.Add(this.txtIterations);
@@ -262,15 +260,6 @@
             this.btnCluster.Text = "Phân cụm";
             this.btnCluster.UseVisualStyleBackColor = true;
             this.btnCluster.Click += new System.EventHandler(this.btnCluster_Click);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(347, 87);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(75, 13);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "Độ chính xác:";
             // 
             // label2
             // 
@@ -354,14 +343,6 @@
             // 
             this.ofdCluster.FileName = "openFileDialog1";
             // 
-            // timer1
-            // 
-            this.timer1.Interval = 10;
-            // 
-            // timer2
-            // 
-            this.timer2.Tick += new System.EventHandler(this.timer2_Tick);
-            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -403,6 +384,14 @@
             // 
             this.ofdImageQuery.FileName = "openFileDialog1";
             // 
+            // lvImageDB
+            // 
+            this.lvImageDB.Location = new System.Drawing.Point(6, 3);
+            this.lvImageDB.Name = "lvImageDB";
+            this.lvImageDB.Size = new System.Drawing.Size(1020, 475);
+            this.lvImageDB.TabIndex = 0;
+            this.lvImageDB.UseCompatibleStateImageBehavior = false;
+            // 
             // frmMain1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -413,6 +402,7 @@
             this.Name = "frmMain1";
             this.Text = "Tra cứu ảnh theo thuật toán Kmeans";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain1_FormClosing);
+            this.Load += new System.EventHandler(this.frmMain1_Load);
             this.tabMain.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -420,6 +410,7 @@
             this.groupBox6.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picQuery)).EndInit();
+            this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -450,13 +441,10 @@
         private System.Windows.Forms.OpenFileDialog ofdCluster;
         private System.Windows.Forms.PictureBox picProcessed;
         private System.Windows.Forms.PictureBox picPreview;
-        private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button btnBrower;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.ListView lvClusters;
         private System.Windows.Forms.TextBox txtImagePath;
-        private System.Windows.Forms.Timer timer2;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown txtIterations;
         private System.Windows.Forms.StatusStrip statusStrip1;
@@ -473,6 +461,7 @@
         private System.Windows.Forms.OpenFileDialog ofdImageQuery;
         private System.Windows.Forms.NumericUpDown txtPrecision;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ListView lvImageDB;
 
     }
 }
