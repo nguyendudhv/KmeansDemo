@@ -31,6 +31,8 @@
             this.components = new System.ComponentModel.Container();
             this.tabMain = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label4 = new System.Windows.Forms.Label();
+            this.txtPrecision = new System.Windows.Forms.NumericUpDown();
             this.btnSearch = new System.Windows.Forms.Button();
             this.btnBrowerQuery = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
@@ -39,9 +41,7 @@
             this.picQuery = new System.Windows.Forms.PictureBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.btnCancel = new System.Windows.Forms.Button();
             this.txtImagePath = new System.Windows.Forms.TextBox();
-            this.btnSaveDB = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.lvClusters = new System.Windows.Forms.ListView();
             this.btnBrower = new System.Windows.Forms.Button();
@@ -64,10 +64,9 @@
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.ofdImageQuery = new System.Windows.Forms.OpenFileDialog();
-            this.txtPrecision = new System.Windows.Forms.NumericUpDown();
-            this.label4 = new System.Windows.Forms.Label();
             this.tabMain.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.txtPrecision)).BeginInit();
             this.groupBox6.SuspendLayout();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picQuery)).BeginInit();
@@ -80,7 +79,6 @@
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picPreview)).BeginInit();
             this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.txtPrecision)).BeginInit();
             this.SuspendLayout();
             // 
             // tabMain
@@ -109,6 +107,28 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Query Image";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.label4.Location = new System.Drawing.Point(28, 325);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(100, 20);
+            this.label4.TabIndex = 6;
+            this.label4.Text = "Độ chính xác";
+            // 
+            // txtPrecision
+            // 
+            this.txtPrecision.Location = new System.Drawing.Point(32, 362);
+            this.txtPrecision.Name = "txtPrecision";
+            this.txtPrecision.Size = new System.Drawing.Size(120, 20);
+            this.txtPrecision.TabIndex = 5;
+            this.txtPrecision.Value = new decimal(new int[] {
+            80,
+            0,
+            0,
+            0});
             // 
             // btnSearch
             // 
@@ -178,9 +198,7 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.btnCancel);
             this.tabPage3.Controls.Add(this.txtImagePath);
-            this.tabPage3.Controls.Add(this.btnSaveDB);
             this.tabPage3.Controls.Add(this.groupBox3);
             this.tabPage3.Controls.Add(this.btnBrower);
             this.tabPage3.Controls.Add(this.btnCluster);
@@ -199,32 +217,12 @@
             this.tabPage3.Text = "Phân cụm";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // btnCancel
-            // 
-            this.btnCancel.Location = new System.Drawing.Point(541, 168);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(102, 36);
-            this.btnCancel.TabIndex = 9;
-            this.btnCancel.Text = "Hủy bỏ:";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
-            // 
             // txtImagePath
             // 
             this.txtImagePath.Location = new System.Drawing.Point(55, 235);
             this.txtImagePath.Name = "txtImagePath";
             this.txtImagePath.Size = new System.Drawing.Size(694, 20);
             this.txtImagePath.TabIndex = 8;
-            // 
-            // btnSaveDB
-            // 
-            this.btnSaveDB.Location = new System.Drawing.Point(429, 189);
-            this.btnSaveDB.Name = "btnSaveDB";
-            this.btnSaveDB.Size = new System.Drawing.Size(102, 36);
-            this.btnSaveDB.TabIndex = 7;
-            this.btnSaveDB.Text = "Lưu vào database";
-            this.btnSaveDB.UseVisualStyleBackColor = true;
-            this.btnSaveDB.Click += new System.EventHandler(this.btnSaveDB_Click);
             // 
             // groupBox3
             // 
@@ -405,28 +403,6 @@
             // 
             this.ofdImageQuery.FileName = "openFileDialog1";
             // 
-            // txtPrecision
-            // 
-            this.txtPrecision.Location = new System.Drawing.Point(32, 362);
-            this.txtPrecision.Name = "txtPrecision";
-            this.txtPrecision.Size = new System.Drawing.Size(120, 20);
-            this.txtPrecision.TabIndex = 5;
-            this.txtPrecision.Value = new decimal(new int[] {
-            80,
-            0,
-            0,
-            0});
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.label4.Location = new System.Drawing.Point(28, 325);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(100, 20);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "Độ chính xác";
-            // 
             // frmMain1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -440,6 +416,7 @@
             this.tabMain.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.txtPrecision)).EndInit();
             this.groupBox6.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picQuery)).EndInit();
@@ -454,7 +431,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.picPreview)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.txtPrecision)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -478,7 +454,6 @@
         private System.Windows.Forms.Button btnBrower;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.ListView lvClusters;
-        private System.Windows.Forms.Button btnSaveDB;
         private System.Windows.Forms.TextBox txtImagePath;
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.Label label3;
@@ -489,7 +464,6 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
-        private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.PictureBox picQuery;
         private System.Windows.Forms.GroupBox groupBox6;
